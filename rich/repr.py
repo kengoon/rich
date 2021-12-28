@@ -56,9 +56,9 @@ def auto(
                         key, value, *default = arg
                         if key is None:
                             append(repr(value))
+                        elif len(default) and default[0] == value:
+                            continue
                         else:
-                            if len(default) and default[0] == value:
-                                continue
                             append(f"{key}={value!r}")
                 else:
                     append(repr(arg))

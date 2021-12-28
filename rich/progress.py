@@ -250,12 +250,11 @@ class SpinnerColumn(ProgressColumn):
         self.spinner = Spinner(spinner_name, style=spinner_style, speed=speed)
 
     def render(self, task: "Task") -> RenderableType:
-        text = (
+        return (
             self.finished_text
             if task.finished
             else self.spinner.render(task.get_time())
         )
-        return text
 
 
 class TextColumn(ProgressColumn):
@@ -408,8 +407,7 @@ class DownloadColumn(ProgressColumn):
         completed_str = f"{completed_ratio:,.{precision}f}"
         total_str = f"{total_ratio:,.{precision}f}"
         download_status = f"{completed_str}/{total_str} {suffix}"
-        download_text = Text(download_status, style="progress.download")
-        return download_text
+        return Text(download_status, style="progress.download")
 
 
 class TransferSpeedColumn(ProgressColumn):
@@ -533,8 +531,7 @@ class Task:
             iter_progress = iter(progress)
             next(iter_progress)
             total_completed = sum(sample.completed for sample in iter_progress)
-            speed = total_completed / total_time
-            return speed
+            return total_completed / total_time
 
     @property
     def time_remaining(self) -> Optional[float]:
@@ -544,8 +541,7 @@ class Task:
         speed = self.speed
         if not speed:
             return None
-        estimate = ceil(self.remaining / speed)
-        return estimate
+        return ceil(self.remaining / speed)
 
     def _reset(self) -> None:
         """Reset progress."""
@@ -867,8 +863,7 @@ class Progress(JupyterMixin):
 
     def get_renderable(self) -> RenderableType:
         """Get a renderable for the progress display."""
-        renderable = Group(*self.get_renderables())
-        return renderable
+        return Group(*self.get_renderables())
 
     def get_renderables(self) -> Iterable[RenderableType]:
         """Get a number of renderables for the progress display."""

@@ -644,9 +644,8 @@ class Table(JupyterMixin):
     def _get_padding_width(self, column_index: int) -> int:
         """Get extra width from padding."""
         _, pad_right, _, pad_left = self.padding
-        if self.collapse_padding:
-            if column_index > 0:
-                pad_left = max(0, pad_left - pad_right)
+        if self.collapse_padding and column_index > 0:
+            pad_left = max(0, pad_left - pad_right)
         return pad_left + pad_right
 
     def _measure_column(
@@ -821,22 +820,25 @@ class Table(JupyterMixin):
                 )
                 yield new_line
             end_section = row and row.end_section
-            if _box and (show_lines or leading or end_section):
-                if (
+            if (
+                _box
+                and (show_lines or leading or end_section)
+                and (
                     not last
                     and not (show_footer and index >= len(row_cells) - 2)
                     and not (show_header and header_row)
-                ):
-                    if leading:
-                        yield _Segment(
-                            _box.get_row(widths, "mid", edge=show_edge) * leading,
-                            border_style,
-                        )
-                    else:
-                        yield _Segment(
-                            _box.get_row(widths, "row", edge=show_edge), border_style
-                        )
-                    yield new_line
+                )
+            ):
+                if leading:
+                    yield _Segment(
+                        _box.get_row(widths, "mid", edge=show_edge) * leading,
+                        border_style,
+                    )
+                else:
+                    yield _Segment(
+                        _box.get_row(widths, "row", edge=show_edge), border_style
+                    )
+                yield new_line
 
         if _box and show_edge:
             yield _Segment(_box.get_bottom(widths), border_style)
