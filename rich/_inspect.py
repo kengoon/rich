@@ -20,8 +20,7 @@ def _first_paragraph(doc: str) -> str:
 
 def _reformat_doc(doc: str) -> str:
     """Reformat docstring."""
-    doc = cleandoc(doc).strip()
-    return doc
+    return cleandoc(doc).strip()
 
 
 class Inspect(JupyterMixin):
@@ -74,8 +73,7 @@ class Inspect(JupyterMixin):
             if (isclass(obj) or callable(obj) or ismodule(obj))
             else str(type(obj))
         )
-        title_text = self.highlighter(title_str)
-        return title_text
+        return self.highlighter(title_str)
 
     def __rich__(self) -> Panel:
         return Panel.fit(
@@ -106,11 +104,9 @@ class Inspect(JupyterMixin):
         signature_text = self.highlighter(_signature)
 
         qualname = name or getattr(obj, "__qualname__", name)
-        qual_signature = Text.assemble(
+        return Text.assemble(
             ("def ", "inspect.def"), (qualname, "inspect.callable"), signature_text
         )
-
-        return qual_signature
 
     def _render(self) -> Iterable[RenderableType]:
         """Render object."""

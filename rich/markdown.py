@@ -126,8 +126,7 @@ class Heading(TextElement):
 
     @classmethod
     def create(cls, markdown: "Markdown", node: Any) -> "Heading":
-        heading = cls(node.level)
-        return heading
+        return cls(node.level)
 
     def on_enter(self, context: "MarkdownContext") -> None:
         self.text = Text()
@@ -385,8 +384,7 @@ class MarkdownContext:
 
     def leave_style(self) -> Style:
         """Leave a style context."""
-        style = self.style_stack.pop()
-        return style
+        return self.style_stack.pop()
 
 
 class Markdown(JupyterMixin):
@@ -504,9 +502,7 @@ class Markdown(JupyterMixin):
                                 if new_line:
                                     yield Segment("\n")
                                 yield from console.render(element, context.options)
-                                element.on_leave(context)
-                            else:
-                                element.on_leave(context)
+                            element.on_leave(context)
                         else:
                             element.on_leave(context)
                             yield from console.render(element, context.options)
@@ -523,9 +519,7 @@ class Markdown(JupyterMixin):
                         if new_line:
                             yield Segment("\n")
                         yield from console.render(element, context.options)
-                        element.on_leave(context)
-                    else:
-                        element.on_leave(context)
+                    element.on_leave(context)
                     new_line = element.new_line
 
 

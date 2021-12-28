@@ -52,7 +52,7 @@ if TYPE_CHECKING:
     )
 
 # Matches Jupyter's special methods
-_re_jupyter_repr = re.compile(f"^_repr_.+_$")
+_re_jupyter_repr = re.compile('^_repr_.+_$')
 
 
 def _is_attr_object(obj: Any) -> bool:
@@ -376,8 +376,7 @@ class Node:
         return True
 
     def __str__(self) -> str:
-        repr_text = "".join(self.iter_tokens())
-        return repr_text
+        return "".join(self.iter_tokens())
 
     def render(
         self, max_width: int = 80, indent_size: int = 4, expand_all: bool = False
@@ -396,13 +395,15 @@ class Node:
         line_no = 0
         while line_no < len(lines):
             line = lines[line_no]
-            if line.expandable and not line.expanded:
-                if expand_all or not line.check_length(max_width):
-                    lines[line_no : line_no + 1] = line.expand(indent_size)
+            if (
+                line.expandable
+                and not line.expanded
+                and (expand_all or not line.check_length(max_width))
+            ):
+                lines[line_no : line_no + 1] = line.expand(indent_size)
             line_no += 1
 
-        repr_str = "\n".join(str(line) for line in lines)
-        return repr_str
+        return "\n".join(str(line) for line in lines)
 
 
 @dataclass
@@ -502,7 +503,7 @@ def traverse(
             try:
                 obj_repr = repr(obj)
             except Exception as error:
-                obj_repr = f"<repr-error {str(error)!r}>"
+                obj_repr = f'<repr-error {error!r}>'
         return obj_repr
 
     visited_ids: Set[int] = set()
@@ -751,10 +752,9 @@ def pretty_repr(
         node = _object
     else:
         node = traverse(_object, max_length=max_length, max_string=max_string)
-    repr_str = node.render(
+    return node.render(
         max_width=max_width, indent_size=indent_size, expand_all=expand_all
     )
-    return repr_str
 
 
 def pprint(
